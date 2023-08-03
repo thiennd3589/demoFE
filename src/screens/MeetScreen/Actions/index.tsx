@@ -8,11 +8,22 @@ import { BsArrowsFullscreen } from "react-icons/bs";
 import { BiCameraOff, BiMicrophoneOff } from "react-icons/bi";
 import { FaCamera, FaMicrophone } from "react-icons/fa";
 import { TbScreenShare } from "react-icons/tb";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "redux/store";
+import { setLayout } from "redux/layoutSlice/slice";
+import { TbArrowsMinimize } from "react-icons/tb";
+import { useNavigate } from "react-router-dom";
 
 export default function Actions() {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const fullscreen = useSelector((state: RootState) => state.layout.fullscreen);
   const daily = useDaily();
-  const media = useRef({ audio: true, video: true });
   const localParticipant = useLocalParticipant();
+  const media = useRef<{ audio: any; video: any }>({
+    audio: localParticipant?.tracks.audio.off === undefined,
+    video: localParticipant?.tracks.video.off === undefined,
+  });
   const screenShareState = useScreenShare();
 
   const onToggleMedia = (type: "audio" | "video") => {
@@ -26,13 +37,23 @@ export default function Actions() {
     media.current.video = !media.current.video;
   };
 
+  const toggleFullScreen = () => {
+    if (fullscreen) {
+      dispatch(setLayout("nothing"));
+    } else dispatch(setLayout("fullscreen"));
+  };
+
   return (
     <div className="flex gap-5 justify-center mt-5 items-center">
       <div
         className="p-4 bg-white rounded-full text-gray-500 cursor-pointer"
-        onClick={() => {}}
+        onClick={toggleFullScreen}
       >
-        <BsArrowsFullscreen size={15} className={"text-gray-600"} />
+        {!fullscreen ? (
+          <BsArrowsFullscreen size={15} className={"text-gray-600"} />
+        ) : (
+          <TbArrowsMinimize size={15} className={"text-gray-600"} />
+        )}
       </div>
       <div
         className="p-4 bg-white rounded-full text-gray-500 cursor-pointer"
@@ -46,7 +67,13 @@ export default function Actions() {
           <FaMicrophone size={15} className={"text-gray-600"} />
         )}
       </div>
-      <span className="text-white px-5 py-2 bg-red-500 rounded-full">
+      <span
+        className="text-white px-5 py-2 bg-red-500 rounded-full cursor-pointer"
+        onClick={() => {
+          daily?.leave();
+          navigate("/landing");
+        }}
+      >
         Kết thúc
       </span>
       <div

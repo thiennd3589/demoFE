@@ -1,6 +1,7 @@
 import axios, { AxiosResponse, AxiosRequestConfig, AxiosError } from "axios";
 
-export const BASE_URL = "http://localhost:8080";
+export const BASE_URL = "http://192.168.0.101:8080";
+export const BASE_WSS = "http://192.168.0.101:8081";
 
 export enum REQUEST_METHOD {
   GET = "get",
@@ -16,14 +17,15 @@ export function configAxios<INPUT>(
   baseURL?: string,
   tokenRequired?: boolean,
   token?: string,
-  data?: INPUT
+  data?: INPUT,
+  contentType?: string
 ): AxiosRequestConfig {
   return tokenRequired || token
     ? {
         url,
         method,
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": contentType ?? "application/json",
           Authorization: `Bearer ${token ?? getToken()}`,
         },
         params,
@@ -34,7 +36,7 @@ export function configAxios<INPUT>(
         url,
         method,
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": contentType ?? "application/json",
         },
         params,
         baseURL: baseURL ? baseURL : BASE_URL,
@@ -50,6 +52,7 @@ export async function query<INPUT, OUTPUT>({
   tokenRequired,
   token,
   data,
+  contentType,
 }: {
   url: string;
   method: REQUEST_METHOD;
@@ -58,6 +61,7 @@ export async function query<INPUT, OUTPUT>({
   tokenRequired?: boolean;
   token?: string;
   data?: any;
+  contentType?: string;
 }) {
   const config: AxiosRequestConfig = configAxios(
     url,
@@ -66,7 +70,8 @@ export async function query<INPUT, OUTPUT>({
     baseURL,
     tokenRequired,
     token,
-    data
+    data,
+    contentType
   );
 
   try {
