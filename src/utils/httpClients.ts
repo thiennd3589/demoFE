@@ -1,7 +1,7 @@
 import axios, { AxiosResponse, AxiosRequestConfig, AxiosError } from "axios";
 
-export const BASE_URL = "http://14.225.207.30";
-export const BASE_WSS = "http://14.225.207.30";
+export const BASE_URL = "https://api.findmeet.online";
+export const BASE_WSS = "https://api.findmeet.online";
 
 export enum REQUEST_METHOD {
   GET = "get",
