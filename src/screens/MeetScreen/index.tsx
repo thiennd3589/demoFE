@@ -44,6 +44,7 @@ function Meet(props: MeetProps) {
   );
 
   useEffect(() => {
+    console.log(socket);
     if (socket) {
       socket.emit("join", { meet_id: meetId });
     }

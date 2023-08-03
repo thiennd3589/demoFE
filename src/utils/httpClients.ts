@@ -1,7 +1,7 @@
 import axios, { AxiosResponse, AxiosRequestConfig, AxiosError } from "axios";
 
-export const BASE_URL = "http://192.168.0.101:8080";
-export const BASE_WSS = "http://192.168.0.101:8081";
+export const BASE_URL = "http://14.225.207.30";
+export const BASE_WSS = "http://14.225.207.30";
 
 export enum REQUEST_METHOD {
   GET = "get",
